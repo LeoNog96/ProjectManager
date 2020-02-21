@@ -56,7 +56,7 @@ namespace ProjectManager.Core.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id:long}")]
         public async Task<ActionResult> Delete(long id)
         {
             try

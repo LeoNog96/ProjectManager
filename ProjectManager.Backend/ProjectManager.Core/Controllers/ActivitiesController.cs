@@ -57,12 +57,12 @@ namespace ActivityManager.Core.Controllers
             }
         }
 
-        [HttpDelete]
-        public async Task<ActionResult> Delete(long id)
+        [HttpDelete("{projectId:long}/{activityId:long}")]
+        public async Task<ActionResult> Delete(long projectId, long activityId)
         {
             try
             {
-                await _service.Delete(id);
+                await _service.Delete(projectId, activityId);
 
                 return NoContent();
             }

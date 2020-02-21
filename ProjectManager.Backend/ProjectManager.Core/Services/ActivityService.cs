@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ActivityManager.Core.Services.Interfaces;
 using ProjectManager.Entities.Models;
@@ -9,8 +10,8 @@ namespace ProjectManager.Core.Services
 {
     public class ActivityService : IActivityService
     {
-        private IActivityRepository _repoActivity;
-        private IProjectRepository _repoProject;
+        private readonly IActivityRepository _repoActivity;
+        private readonly IProjectRepository _repoProject;
 
         public ActivityService(IActivityRepository repoActivity, IProjectRepository repoProject)
         {
@@ -18,9 +19,11 @@ namespace ProjectManager.Core.Services
             _repoProject = repoProject;
         }
 
-        public Task Delete(long ActivityId)
+        public async Task Delete(long projectId, long activityId)
         {
-            throw new System.NotImplementedException();
+            await _repoActivity.Delete(activityId);
+
+            await AfterTransactionActivity(projectId);
         }
 
         public async Task<Activity> Get(long activityId)
@@ -37,18 +40,24 @@ namespace ProjectManager.Core.Services
         {
             var newActivity = await _repoActivity.Save(activity);
 
-            await PosSaveOrUpdateActivity(newActivity);
+            await AfterTransactionActivity(newActivity.ProjectId);
 
             return newActivity;
         }
 
-        public async Task PosSaveOrUpdateActivity(Activity activity)
+        public async Task AfterTransactionActivity(long projectId)
         {
-            var project = await _repoProject.Get(activity.ProjectId);
+            var project = await _repoProject.Get(projectId);
 
-            if (activity.FinalDate > project.FinalDate)
+            var activities = await GetAllByProject(project.Id);
+
+            var acDateBigger = activities.Find(x => x.FinalDate > project.FinalDate);
+
+            bool isLate = acDateBigger == null;
+
+            if (project.Late != isLate)
             {
-                project.Late = true;
+                project.Late = isLate;
 
                 await _repoProject.Update(project);
             }
@@ -58,7 +67,7 @@ namespace ProjectManager.Core.Services
         {
             await _repoActivity.Update(activity);
 
-            await PosSaveOrUpdateActivity(activity);
+            await AfterTransactionActivity(activity.ProjectId);
         }
     }
 }

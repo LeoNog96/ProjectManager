@@ -37,7 +37,8 @@ namespace ActivityManager.Core.Services.Interfaces
         /// <summary>
         /// Remove uma Atividade
         /// </summary>
-        /// <param name="ActivityId">Id da Atividade a ser removida</param>
-        Task Delete(long ActivityId);
+        /// <param name="projectId">Id do projeto da Atividade a ser removida</param>
+        /// <param name="activityId">Id da Atividade a ser removida</param>
+        Task Delete(long projectId, long activityId);
     }
 }
