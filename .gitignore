@@ -282,7 +282,6 @@ yarn-error.log*
 *.suo
 *.ntvs*
 *.njsproj
-*.sln
 *.sw?
 #Electron-builder output
 /dist_electron

@@ -9,7 +9,8 @@ using Microsoft.Extensions.Logging;
 
 namespace ProjectManager.Core
 {
-    public class Program
+    #pragma warning disable CS1591
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -18,9 +19,7 @@ namespace ProjectManager.Core
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
     }
+    #pragma warning restore CS1591
 }
