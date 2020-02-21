@@ -20,16 +20,5 @@ namespace ProjectManager.Repositories
         {
             return await _db.Activities.Where(x => x.ProjectId == projectId).ToListAsync();
         }
-
-        public async Task ProjectLate(long projectId)
-        {
-            var entity = await _db.Projects.FindAsync(projectId);
-
-            entity.Late = true;
-
-            _db.Projects.Update(entity);
-
-            await _db.SaveChangesAsync();
-        }
     }
 }

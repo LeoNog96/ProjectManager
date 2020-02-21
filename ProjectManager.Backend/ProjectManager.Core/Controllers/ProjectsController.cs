@@ -21,31 +21,67 @@ namespace ProjectManager.Core.Controllers
         [HttpGet("{id:long}", Name="GetProject")]
         public async Task<ActionResult<Project>> Get(long id)
         {
-            throw new NotImplementedException();
+            var project = await _service.Get(id);
+
+            return project ?? (ActionResult<Project>)NotFound();
         }
 
         [HttpPost]
         public async Task<ActionResult<Project>> Post(Project project)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var newProject = await _service.Save(project);
+
+                return CreatedAtRoute("GetProject", new {id = newProject.Id}, newProject);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut]
         public async Task<ActionResult> Put(Project project)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _service.Update(project);
+
+                return NoContent();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete]
         public async Task<ActionResult> Delete(long id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _service.Delete(id);
+
+                return NoContent();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("all", Name="GetProjects")]
         public async Task<ActionResult<List<Project>>> GetAll()
         {
-            throw new NotImplementedException();
+            var project = await _service.GetAll();
+
+            if (project.Count == 0 || project == null)
+            {
+                return NotFound();
+            }
+
+            return project;
         }
     }
 }
