@@ -53,7 +53,7 @@ namespace ProjectManager.Core.Services
 
             var acDateBigger = activities.Find(x => x.FinalDate > project.FinalDate);
 
-            bool isLate = acDateBigger == null;
+            bool isLate = acDateBigger != null;
 
             if (project.Late != isLate)
             {
