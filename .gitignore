@@ -265,6 +265,7 @@ __pycache__/
 .DS_Store
 node_modules
 /dist
+dist
 Teste_*
 
 # local env files
