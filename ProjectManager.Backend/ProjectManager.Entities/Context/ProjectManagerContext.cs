@@ -26,7 +26,7 @@ namespace ProjectManager.Entities.Context
             {
                 // Para gerar novas migrations comentar a linha 28 e descomentar a 29
                 optionsBuilder.UseNpgsql(_connectionString);
-                // optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ProjectManager;Username=postgres;Password=postgre");
+                // optionsBuilder.UseNpgsql("Host=35.247.221.10;Port=5432;Database=projectmanager;Username=postgres;Password=Labzwv20@");
             }
         }
 
@@ -57,6 +57,10 @@ namespace ProjectManager.Entities.Context
                 entity.Property(e => e.Late)
                     .IsRequired()
                     .HasColumnName("late");
+
+                entity.Property(e => e.Removed)
+                    .HasColumnName("removed")
+                    .HasDefaultValueSql("false");
             });
 
             modelBuilder.Entity<Activity>(entity =>

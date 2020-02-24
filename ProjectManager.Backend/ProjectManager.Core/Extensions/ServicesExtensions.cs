@@ -5,9 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using ProjectManager.Core.Services.Interfaces;
+using ProjectManager.Core.Services;
 using ProjectManager.Entities.Context;
 using ProjectManager.Repositories;
 using ProjectManager.Repositories.Interfaces;
+using ActivityManager.Core.Services.Interfaces;
 
 namespace ProjectManager.Core.Extensions
 {
@@ -35,6 +38,8 @@ namespace ProjectManager.Core.Extensions
 
         public static void ConfigureServices (this IServiceCollection services)
         {
+            services.AddScoped<IProjectService, ProjectService>();
+            services.AddScoped<IActivityService, ActivityService>();
         }
 
         public static void ConfigureSwaggerDocs (this IServiceCollection services)

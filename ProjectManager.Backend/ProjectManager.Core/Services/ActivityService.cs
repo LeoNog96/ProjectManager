@@ -42,25 +42,49 @@ namespace ProjectManager.Core.Services
 
             await AfterTransactionActivity(newActivity.ProjectId);
 
+            newActivity.Project = null;
+
             return newActivity;
         }
 
         public async Task AfterTransactionActivity(long projectId)
         {
-            var project = await _repoProject.Get(projectId);
+            var project = await _repoProject.GetByVerify(projectId);
 
             var activities = await GetAllByProject(project.Id);
+
+            var percentActivities = CalcPercentComplete(activities.Count,
+                activities.Where(x => x.Finished.Value).ToList().Count);
 
             var acDateBigger = activities.Find(x => x.FinalDate > project.FinalDate);
 
             bool isLate = acDateBigger != null;
 
+            bool modify = false;
+
+            if (project.PercentComplete != percentActivities)
+            {
+                project.PercentComplete = percentActivities;
+
+                modify = true;
+            }
+
             if (project.Late != isLate)
             {
                 project.Late = isLate;
 
+                modify = true;
+            }
+
+            if (modify)
+            {
                 await _repoProject.Update(project);
             }
+        }
+
+        public double CalcPercentComplete(int totalActivities, int finishedActivities)
+        {
+            return 100 - (((totalActivities - finishedActivities) * 100)  / totalActivities);
         }
 
         public async Task Update(Activity activity)

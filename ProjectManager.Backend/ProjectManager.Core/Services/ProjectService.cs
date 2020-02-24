@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ProjectManager.Core.Services.Interfaces;
 using ProjectManager.Entities.Models;
@@ -17,7 +18,7 @@ namespace ProjectManager.Core.Services
 
         public async Task Delete(long projectId)
         {
-            await _repository.Delete(projectId);
+            await _repository.DeleteProject(projectId);
         }
 
         public async Task<Project> Get(long projectId)
@@ -27,7 +28,9 @@ namespace ProjectManager.Core.Services
 
         public async Task<List<Project>> GetAll()
         {
-            return await _repository.GetAll();
+            var all =  await _repository.GetAll();
+
+            return all.Where(x => !x.Removed.Value).ToList();
         }
 
         public async Task<Project> Save(Project project)

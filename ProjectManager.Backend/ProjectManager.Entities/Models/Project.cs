@@ -11,6 +11,7 @@ namespace ProjectManager.Entities.Models
         public DateTime FinalDate { get; set; }
         public double PercentComplete { get; set; }
         public bool Late { get; set; }
+        public bool? Removed { get; set; }
 
         public virtual ICollection<Activity> Activities  {get; set; }
     }

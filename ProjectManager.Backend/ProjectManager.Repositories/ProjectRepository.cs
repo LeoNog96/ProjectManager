@@ -14,5 +14,19 @@ namespace ProjectManager.Repositories
             :base(db)
         {
         }
+
+        public async Task<Project> GetByVerify(long projectId)
+        {
+            return await _db.Projects.FindAsync(projectId);
+        }
+
+        public async Task DeleteProject(long projectId)
+        {
+            var entity = await Get(projectId);
+
+            entity.Removed = true;
+
+            await Update(entity);
+        }
     }
 }
