@@ -1,0 +1,33 @@
+version: '3.4'
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./docker/dataPostgresql:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_MULTIPLE_DATABASES="projectmanager","teste"  
+      - POSTGRES_USER=projectmanager
+      - POSTGRES_PASSWORD=projectmanager
+    ports:
+      - 54321:5432
+      
+  api:
+    build: ./ProjectManager.Backend
+    environment: 
+      - ProjectManagerContextDb=Host=db;Port=5432;Database=projectmanager;Username=projectmanager;Password=projectmanager
+    ports:
+      - 5002:80
+    links:
+      - db
+    depends_on:
+      - db
+
+  web:
+    build: ./projectmanager.frontend
+    volumes:
+      - ./docker/nginx/:/etc/nginx/conf.d
+    ports:
+      - 7070:80
+    depends_on:
+      - api
