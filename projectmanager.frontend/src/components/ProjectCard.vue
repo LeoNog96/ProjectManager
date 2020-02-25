@@ -17,9 +17,9 @@
                             <md-icon>edit</md-icon>
                             <md-tooltip md-direction="bottom">Editar</md-tooltip>
                         </md-button>
-                        <md-button class="md-icon-button md-primary">
+                        <md-button class="md-icon-button md-primary" @click="goActivities">
                             <md-icon>arrow_forward</md-icon>
-                            <md-tooltip md-direction="bottom">Ir para</md-tooltip>
+                            <md-tooltip md-direction="bottom">Ir para atividades</md-tooltip>
                         </md-button>
                     </div>
 
@@ -47,23 +47,25 @@
         >
         </ProjectCEDialog>
 
-        <DialogConfirm
-            :title="'Deseja Excluir o projeto?'"
-            :content="'A exclusão do projeto implica na exclusão de todas as atividades do mesmo'"
-            :active="activeDelete"
-            @confirm="deleteProject">
-        </DialogConfirm>
+        <md-dialog-confirm
+            :md-active.sync="activeDelete"
+            md-title="Deseja Excluir o projeto?"
+            md-content="A exclusão do projeto implica na exclusão de todas as atividades do mesmo"
+            md-confirm-text="Sim"
+            md-cancel-text="Não"
+            @md-cancel="onCancel"
+            @md-confirm="deleteProject" />
     </div>
 </template>
 
 <script>
 import ProjectCEDialog from './ProjectCEDialog'
-import DialogConfirm from './DialogConfirm'
+
 
 export default {
     name: 'ProjectCard',
     
-    components:{ProjectCEDialog, DialogConfirm},
+    components:{ProjectCEDialog},
 
     props:{
         project: Object
@@ -90,11 +92,17 @@ export default {
             return dayfF + '/' + monthF + '/' + yearF;
         },
 
-        deleteProject(obj){
-            this.activeDelete = false
-            if (obj){
-                console.log('teste')
-            }
+        goActivities(){
+            this.$router.push('/projeto/'+this.project.id+'/atividades')
+        },
+
+        deleteProject(){
+            console.log('teste')
+            
+        },
+
+        onCancel(){
+
         },
 
         projectDialogManager(obj){
