@@ -9,7 +9,7 @@
             <md-card-expand>
                 <md-card-actions md-alignment="space-between">
                     <div>
-                        <md-button class="md-icon-button md-primary">
+                        <md-button class="md-icon-button md-primary" @click="activeDelete = true">
                             <md-icon>delete</md-icon>
                             <md-tooltip md-direction="bottom">Excluir</md-tooltip>
                         </md-button>
@@ -46,15 +46,24 @@
             :showDialog="showDialog"
         >
         </ProjectCEDialog>
+
+        <DialogConfirm
+            :title="'Deseja Excluir o projeto?'"
+            :content="'A exclusão do projeto implica na exclusão de todas as atividades do mesmo'"
+            :active="activeDelete"
+            @confirm="deleteProject">
+        </DialogConfirm>
     </div>
 </template>
 
 <script>
 import ProjectCEDialog from './ProjectCEDialog'
+import DialogConfirm from './DialogConfirm'
+
 export default {
     name: 'ProjectCard',
     
-    components:{ProjectCEDialog},
+    components:{ProjectCEDialog, DialogConfirm},
 
     props:{
         project: Object
@@ -62,6 +71,7 @@ export default {
 
     data: () => ({
         showDialog: false,
+        activeDelete: false,
     }),
     
     methods:{
@@ -78,6 +88,13 @@ export default {
             let yearF = newDate.getFullYear()
 
             return dayfF + '/' + monthF + '/' + yearF;
+        },
+
+        deleteProject(obj){
+            this.activeDelete = false
+            if (obj){
+                console.log('teste')
+            }
         },
 
         projectDialogManager(obj){

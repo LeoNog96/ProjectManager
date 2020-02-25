@@ -44,6 +44,7 @@ export default {
             "id":0
         }
     }),
+    
     methods:{
         projectDialogManager(obj){
             this.showDialog = obj.showDialog
