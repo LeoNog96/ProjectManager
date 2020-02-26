@@ -20,9 +20,14 @@
             <EmptyState :label="label" :description="desc"></EmptyState>
         </div>
         <div v-else>
-            <ActivityTable :activities="listActivities"></ActivityTable>
+            <ActivityTable :activities="listActivities" @refresh="loadActivities"></ActivityTable>
             <SpeedDial @new-item="newItem" :bottomPosition="'md-bottom-right'"></SpeedDial>
         </div>
+        <ActivityCEDialog :activity="activity" 
+            :projectId="projectId" 
+            :showDialog="this.showDialog" 
+            @close-task-dialog="activityDialogManager" 
+        ></ActivityCEDialog>
     </div>
   
 </template>
@@ -30,13 +35,14 @@
 <script>
 import EmptyState from '../components/EmptyState'
 import SpeedDial from '../components/SpeedDial'
+import ActivityCEDialog from '../components/ActivityCEDialog'
 import ActivityTable from '../components/ActivityTable'
 import {utils} from '../mixins/utils'
 
 export default {
     name:"Activities",
 
-    components:{EmptyState, SpeedDial, ActivityTable},
+    components:{EmptyState, SpeedDial, ActivityTable, ActivityCEDialog},
     
     mixins:[utils],
 
@@ -66,6 +72,14 @@ export default {
             this.showDialog = true
         },
 
+        activityDialogManager(obj){
+            this.showDialog = obj.showDialog
+            if(obj.activitySaved)
+            {
+                this.loadActivities()
+            }
+        },
+        
         loadActivities(){
             this.listActivities = [
                 {
@@ -73,11 +87,13 @@ export default {
                     "name": "Criar a primeira atividade",
                     "initialDate":"2020-02-20T14:07:12.395Z",
                     "finalDate":"2020-02-24T14:07:12.395Z",
+                    "projectId":1,
                     "finished":true,
                 },
                 {
                     "id":2,
                     "name": "teste1",
+                    "projectId":1,
                     "initialDate":"2020-02-20T14:07:12.395Z",
                     "finalDate":"2020-02-24T14:07:12.395Z",
                     "finished":false,
@@ -87,7 +103,7 @@ export default {
     },
     mounted(){
         this.loadActivities()
-        this.projectId = this.$route.params.id
+        this.projectId = parseInt(this.$route.params.id)
     }
 }
 </script>

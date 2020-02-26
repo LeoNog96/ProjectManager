@@ -19,7 +19,7 @@
                     <div class="md-layout md-gutter">
                         <div class="md-layout-item md-small-size-100">
                             <div :class="getValidationClass('initialDate')">
-                                <md-datepicker v-model="form.initialDate">
+                                <md-datepicker v-model="form.initialDate" md-immediately >
                                     <label>Data de Inicio</label>
                                 </md-datepicker>
                                 <span class="l-error" v-if="!$v.form.initialDate.required">A data inicial do projeto é requerida</span>
@@ -30,7 +30,7 @@
                     <div class="md-layout md-gutter">
                         <div class="md-layout-item md-small-size-100">
                             <div :class="getValidationClass('finalDate')">
-                                <md-datepicker v-model="form.finalDate">
+                                <md-datepicker v-model="form.finalDate" md-immediately >
                                     <label>Data de Fim</label>
                                 </md-datepicker>
                                 <span class="l-error" v-if="!$v.form.finalDate.required">A data final do projeto é requerida</span>
@@ -50,9 +50,7 @@
                             </md-field>
                         </div>
                     </div>
-                </md-dialog-content>
-
-                
+                </md-dialog-content>              
 
             </form>
             <md-dialog-actions>
@@ -70,12 +68,12 @@ import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 
 export default {
-    name: 'ProjectCEDialog',
+    name: 'ActivityCEDialog',
     
     mixins: [validationMixin],
     
     props:{
-        projectId: Int32Array,
+        projectId:Number,
         showDialog: Boolean,
         activity: Object
     },
@@ -107,6 +105,7 @@ export default {
         }
       }
     },
+
     methods:{
         getValidationClass (fieldName) {
             const field = this.$v.form[fieldName]
@@ -132,7 +131,7 @@ export default {
                 this.form.initialDate = new Date(this.activity.initialDate)
                 this.form.finalDate = new Date(this.activity.finalDate)
                 this.form.finished = this.activity.finished
-            }            
+            }    
         },
 
         save(){
@@ -143,6 +142,7 @@ export default {
                 initialDate: new Date(this.form.initialDate).toISOString(),
                 finalDate: new Date(this.form.finalDate).toISOString(),
                 finished: this.form.finished,
+                projectId: this.projectId
             }
             
             window.setTimeout(() => {
@@ -164,6 +164,7 @@ export default {
                 initialDate: new Date(this.form.initialDate).toISOString(),
                 finalDate: new Date(this.form.initialDate).toISOString(),
                 finished: this.form.finished,
+                projectId: this.projectId
             }
             
             window.setTimeout(() => {

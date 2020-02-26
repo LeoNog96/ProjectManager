@@ -27,19 +27,17 @@
                 <md-table-cell md-label='Finalizar'>
                     <md-button class="md-icon-button md-primary" @click="finishActivity(item)" :disabled="item.finished">
                         <md-icon>done</md-icon>
-                        <md-tooltip md-direction="bottom">Excluir</md-tooltip>
+                        <md-tooltip md-direction="bottom">Finalizar Atividade</md-tooltip>
                     </md-button>
                 </md-table-cell>
 
                 <md-table-cell md-label='Editar'>
-                    <md-button class="md-icon-button md-primary" @click="editActivity(item)">
-                        <md-icon>edit</md-icon>
-                        <md-tooltip md-direction="bottom">Editar</md-tooltip>
-                    </md-button>
+                    <EditActivityInTable @edit="activityDialogManager" :item="item">
+                    </EditActivityInTable>
                 </md-table-cell>
 
                 <md-table-cell md-label='Excluir'>
-                    <md-button class="md-icon-button md-primary" @click="activeDelete = true">
+                    <md-button class="md-icon-button md-primary" @click="deleteActivity(item)">
                         <md-icon>delete</md-icon>
                         <md-tooltip md-direction="bottom">Excluir</md-tooltip>
                     </md-button>
@@ -54,33 +52,40 @@
             md-confirm-text="Sim"
             md-cancel-text="Não"
             @md-cancel="onCancel"
-            @md-confirm="deleteActivity" />
+            @md-confirm="deleteConfirmActivity" />
     </div>
 </template>
 
 <script>
 import {utils} from '../mixins/utils'
+import EditActivityInTable from './EditActivityInTable'
 
 export default {
     name:"ActivityTable",
 
     mixins:[utils],
+    
+    components:{EditActivityInTable},
 
     props:{
         activities: Array
     },
 
     data:() =>({
-        activeDelete: false
+        activeDelete: false,       
+        toDelete: null,
     }),
 
     methods:{
-        editActivity(item){
-            console.log(item)
+
+        deleteConfirmActivity(){
+            console.log(this.toDelete)
+            this.$emit('refresh')
         },
 
         deleteActivity(item){
-            console.log(item)
+            this.toDelete = item
+            this.activeDelete = true
         },
 
         finishActivity(item){
@@ -90,6 +95,13 @@ export default {
 
         onCancel(){
 
+        },
+
+        activityDialogManager(obj){            
+            if(obj.activitySaved)
+            {
+                this.$emit('refresh')
+            }
         }
     }
 }

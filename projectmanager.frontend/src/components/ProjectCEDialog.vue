@@ -19,7 +19,7 @@
                     <div class="md-layout md-gutter">
                         <div class="md-layout-item md-small-size-100">
                             <div :class="getValidationClass('initialDate')">
-                                <md-datepicker v-model="form.initialDate">
+                                <md-datepicker v-model="form.initialDate" md-immediately >
                                     <label>Data de Inicio</label>
                                 </md-datepicker>
                                 <span class="l-error" v-if="!$v.form.initialDate.required">A data inicial do projeto é requerida</span>
@@ -30,7 +30,7 @@
                     <div class="md-layout md-gutter">
                         <div class="md-layout-item md-small-size-100">
                             <div :class="getValidationClass('finalDate')">
-                                <md-datepicker v-model="form.finalDate">
+                                <md-datepicker v-model="form.finalDate" md-immediately >
                                     <label>Data de Fim</label>
                                 </md-datepicker>
                                 <span class="l-error" v-if="!$v.form.finalDate.required">A data final do projeto é requerida</span>
