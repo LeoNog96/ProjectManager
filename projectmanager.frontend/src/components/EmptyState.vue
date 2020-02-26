@@ -1,7 +1,7 @@
 <template>
   <div>
     <md-empty-state
-        md-icon="devices_other"
+        md-icon="assignment"
         :md-label="label"
         :md-description="description"
     >

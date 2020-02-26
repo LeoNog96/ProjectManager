@@ -7,11 +7,6 @@
 			</md-button>
 
 			<span class="md-title">Project Manager</span>
-			
-			<md-button  class="md-icon-button" to="/">
-				<md-icon id="iconHome">home</md-icon>
-			</md-button>
-
 		</md-toolbar>
 
 		<!-- Menu lateral esquerda (opcoes) -->
@@ -88,10 +83,6 @@ export default {
 			justify-content: left;
 		}
 	}
-
-	.dc-datepicker > .md-icon.md-theme-default.md-icon-image svg{
-		fill: var(--md-theme-default-primary) !important;
-	}
 </style>
 
 <style lang="scss" scoped>
@@ -99,11 +90,6 @@ export default {
 	.md-content {
 		padding: 20px;
 	}
-
-	.text-notify{
-		text-align: center;
-	}
-
 </style>
 
 
