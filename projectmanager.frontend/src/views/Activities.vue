@@ -17,7 +17,7 @@
             <md-divider ></md-divider>
         </div>
         <div v-if="listActivities.length === 0">
-            <EmptyState :label="label" :description="desc"></EmptyState>
+            <EmptyState :label="label" :description="desc"  @new-from-empty="newItem"></EmptyState>
         </div>
         <div v-else>
             <ActivityTable :activities="listActivities" @refresh="loadActivities"></ActivityTable>

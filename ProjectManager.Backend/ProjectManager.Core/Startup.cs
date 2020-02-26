@@ -56,7 +56,7 @@ namespace ProjectManager.Core
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(option => option.AllowAnyOrigin());
+            app.UseCors("MyPolicy");
 
             app.UseSwagger();
 

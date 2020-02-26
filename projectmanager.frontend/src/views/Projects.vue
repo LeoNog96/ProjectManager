@@ -4,8 +4,11 @@
             <h3>Projetos</h3>
             <md-divider ></md-divider>
         </div>
+        
+        <md-progress-bar v-if="showSpinner" md-mode="query"></md-progress-bar>
+
         <div v-if="listProject.length === 0">
-            <EmptyState :label="label" :description="desc"></EmptyState>
+            <EmptyState :label="label" :description="desc" @new-from-empty="newItem"></EmptyState>
         </div>
         <div v-else class="project-center">
             <ProjectCard class="project"
@@ -42,7 +45,8 @@ export default {
         listProject:[],
         project:{
             "id":0
-        }
+        },
+        showSpinner: false,
     }),
     
     methods:{
@@ -57,37 +61,25 @@ export default {
         newItem(){
             this.showDialog = true
         },
+        
+        loadListCallBack(response){
+            this.listProject = response.data
+        },
+        
+        callBackError(err){
+			console.log(err.response.data.message)
+        },
 
+        callbackLoadTimes(){
+			this.showSpinner = false
+		},
+        
         loadList() {
-            this.listProject = [
-                {
-                    "id": 1,
-                    "name": "primeiro teste de teste do teste da teste",
-                    "initialDate": "2020-02-24T14:07:12.395Z",
-                    "finalDate": "2020-02-24T14:07:12.395Z",
-                    "percentComplete": 10,
-                    "late": false,
-                    "removed": true,
-                },
-                {
-                    "id": 2,
-                    "name": "primeiro teste de teste do teste da teste",
-                    "initialDate": "2020-02-24T14:07:12.395Z",
-                    "finalDate": "2020-02-24T14:07:12.395Z",
-                    "percentComplete": 10,
-                    "late": false,
-                    "removed": true,    
-                },
-                {
-                    "id": 3,
-                    "name": "primeiro teste de teste do teste da teste",
-                    "initialDate": "2020-02-24T14:07:12.395Z",
-                    "finalDate": "2020-02-24T14:07:12.395Z",
-                    "percentComplete": 18,
-                    "late": false,
-                    "removed": true,
-                }
-            ]
+            this.showSpinner = true
+            this.$http.get('projects/all')
+				.then(this.loadListCallBack)
+				.finally(this.callbackLoadTimes)
+				.catch(this.callBackError)
         }
     },
     mounted(){

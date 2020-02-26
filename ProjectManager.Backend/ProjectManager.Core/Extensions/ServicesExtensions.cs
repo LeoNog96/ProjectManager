@@ -16,9 +16,14 @@ namespace ProjectManager.Core.Extensions
 {
     public static class ServicesExtensions
     {
-         public static void ConfigureCors (this IServiceCollection services)
+        public static void ConfigureCors (this IServiceCollection services)
         {
-            services.AddCors();
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
         }
 
         public static void ConfigureDbContext(this IServiceCollection services, IConfiguration config)

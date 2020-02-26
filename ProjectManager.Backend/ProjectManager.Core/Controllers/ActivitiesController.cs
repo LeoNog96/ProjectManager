@@ -9,7 +9,7 @@ using ProjectManager.Entities.Models;
 namespace ActivityManager.Core.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ActivitiesController : ControllerBase
     {
         private readonly IActivityService _service;

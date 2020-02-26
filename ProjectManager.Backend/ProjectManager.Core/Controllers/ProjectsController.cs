@@ -8,7 +8,7 @@ using ProjectManager.Entities.Models;
 namespace ProjectManager.Core.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ProjectsController : ControllerBase
     {
         private readonly IProjectService _service;

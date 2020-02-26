@@ -5,7 +5,7 @@
         :md-label="label"
         :md-description="description"
     >
-        <md-button class="md-primary md-raised">{{label}}</md-button>
+        <md-button class="md-primary md-raised" @click="newFromEmpty">{{label}}</md-button>
     </md-empty-state>
   </div>
 </template>
@@ -16,6 +16,12 @@
     props:{
         label: String,
         description: String
+    },
+
+    methods:{
+      newFromEmpty(){
+        this.$emit('new-from-empty')
+      }
     }
   }
 </script>

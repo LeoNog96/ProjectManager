@@ -117,20 +117,33 @@ export default {
 
         save(){
             this.sending = true
+            
             let obj = {
                 name: this.form.name,
-                initialDate: this.form.initialDate,
-                finalDate: this.form.finalDate,
+                initialDate: new Date(this.form.initialDate).toISOString(),
+                finalDate: new Date(this.form.finalDate).toISOString(),
                 percentComplete: 0,
             }
-            window.setTimeout(() => {
-                this.projectSaved = true
-                this.sending = false
-                this.clearForm()
-                this.$emit('close-task-dialog',{showDialog: false, projectSaved: this.projectSaved})
-                }, 1500
-            )
-            console.log(obj);
+            console.log(obj)
+            this.$http.post('Projects', obj)
+                .then(response => 
+                {
+                    if(response.status === 201){
+                        this.projectSaved = true
+                    }
+                })
+                .catch(() =>
+                {
+                    this.projectSaved = false
+                    // this.$emit('close-task-dialog',{showDialog: false, projectSaved: this.projectSaved})
+                
+                })
+                .finally(() =>
+                {
+                    this.clearForm()
+                    this.sending = false
+                    this.$emit('close-task-dialog',{showDialog: false, projectSaved: this.projectSaved})
+                })
         },
 
         update(){
