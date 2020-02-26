@@ -43,42 +43,47 @@ O funcionamento da aplicação acontece de forma simples e intuitiva, abaixo ser
     Após a criação do projeto, podemos:
 
     - Excluir Projetos:
-    ![ExcluirProjeto](https://github.com/LeoNog96/ProjectManager/blob/master/img/excluir_projeto.png)
+        ![ExcluirProjeto](https://github.com/LeoNog96/ProjectManager/blob/master/img/excluir_projeto.png)
+
 
     - Editar Projetos:
-    ![EditarProjeto](https://github.com/LeoNog96/ProjectManager/blob/master/img/editar_projeto.png)
+        ![EditarProjeto](https://github.com/LeoNog96/ProjectManager/blob/master/img/editar_projeto.png)
+
 
     - Ver detalhes do projeto:
-    ![DetalhesProjeto](https://github.com/LeoNog96/ProjectManager/blob/master/img/detalhes.png)
+        ![DetalhesProjeto](https://github.com/LeoNog96/ProjectManager/blob/master/img/detalhes.png)
+
 
     - Ir para atividades:
-    ![AtividadesProjeto](https://github.com/LeoNog96/ProjectManager/blob/master/img/ir_atividades.png)
+        ![AtividadesProjeto](https://github.com/LeoNog96/ProjectManager/blob/master/img/ir_atividades.png)
 
 * Atividades: Após usar a opção ir para atividades, é encaminhado para a página de atividades referente ao projeto, Nela podemos listar todas atividades assim como criar novas atividades, excluir, editar e finalizar atividades.
 
     - Criar novas Atividades: Para criar novas atividades basta um click no botão `Criar a primeira atividade`:
-    ![NovaAtividade](https://github.com/LeoNog96/ProjectManager/blob/master/img/criar_primeira_atividade.png)
+        ![NovaAtividade](https://github.com/LeoNog96/ProjectManager/blob/master/img/criar_primeira_atividade.png)
 
     ou até mesmo com um click em `novo`:
-    ![NovaAtividade2](https://github.com/LeoNog96/ProjectManager/blob/master/img/criar_atividade.png)
+        ![NovaAtividade2](https://github.com/LeoNog96/ProjectManager/blob/master/img/criar_atividade.png)
 
     com isto um basta preencher o formulário de Atividade:
-    ![NovaAtividade3](https://github.com/LeoNog96/ProjectManager/blob/master/img/criando_atividade.png)
+        ![NovaAtividade3](https://github.com/LeoNog96/ProjectManager/blob/master/img/criando_atividade.png)
 
     Após a criação da atividade, temos a seguinte tabela:
-    
-    ![TelaAtividades](https://github.com/LeoNog96/ProjectManager/blob/master/img/tela_atividades.png)
+        ![TelaAtividades](https://github.com/LeoNog96/ProjectManager/blob/master/img/tela_atividades.png)
     
     Nela podemos:
     
     - Excluir Ativiades:
-    ![ExcluirAtiviade](https://github.com/LeoNog96/ProjectManager/blob/master/img/excluir_atividade.png)
+        ![ExcluirAtiviade](https://github.com/LeoNog96/ProjectManager/blob/master/img/excluir_atividade.png)
+
 
     - Editar Ativiades:
-    ![EditarAtiviade](https://github.com/LeoNog96/ProjectManager/blob/master/img/editar_atividade.png)
+        ![EditarAtiviade](https://github.com/LeoNog96/ProjectManager/blob/master/img/editar_atividade.png)
+
 
     - Finalizar:
-    ![FinalizarAtiviade](https://github.com/LeoNog96/ProjectManager/blob/master/img/finalizar_atividade.png)
+        ![FinalizarAtiviade](https://github.com/LeoNog96/ProjectManager/blob/master/img/finalizar_atividade.png)
+
 
 * Menu Lateral: O Menu Lateral nesta versão possui somente uma opção que é para voltar aos projetos, posteriomente pode ser implementado mais funções para o ProjectManager.
     ![MenuLateral](https://github.com/LeoNog96/ProjectManager/blob/master/img/back_projetos.png)
