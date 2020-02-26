@@ -1,37 +1,28 @@
 # ProjectMananger
 
-## Tecnologias Utilizadas
+### Tecnologias Utilizadas
 
 - dotnet core >= 3.0
 - Postgresql >= 12
 - VueJs >= 2.x
+- Docker
 
-### Restore project Dependences
-```
-dotnet restore
-```
+### Executar Projeto
 
-### Build project
-```
-dotnet build
-```
+Para executar todo projeto foi criado um docker-compose, antes de executar o docker-compose deve-se realizar o seguinte procedimento:
 
-### Build docker
-```
-docker build .
+* No projeto `projectmanager.frontend` existe um arquvio com o nome `.env.production` substituir `SEU_IP` pelo o ip da sua maquina.
+
+Após realizar o procedimento acima executar o seguinte comando na raiz do projeto:
+
+```console
+$ docker-compose up
 ```
 
-### Run test project
-```
-dotnet test
-```
+Este comando irá executar o Projeto.
 
-### Run project for development
-```
-dotnet run --project TaskManager.api/TaskManager.api.csproj
-```
+### Documentação WebApi
 
-### Publish project production
-```
-dotnet publish --release
-```
+Para Acessar a documentação REST da API basta acessar o seguinte endereço `SEU_IP:5002/swagger`.
+
+## A Aplicação
