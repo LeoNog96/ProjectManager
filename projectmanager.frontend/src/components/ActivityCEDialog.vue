@@ -173,7 +173,7 @@ export default {
                 id: this.activity.id,
                 name: this.form.name,
                 initialDate: new Date(this.form.initialDate).toISOString(),
-                finalDate: new Date(this.form.initialDate).toISOString(),
+                finalDate: new Date(this.form.finalDate).toISOString(),
                 finished: this.form.finished,
                 projectId: this.projectId
             }
