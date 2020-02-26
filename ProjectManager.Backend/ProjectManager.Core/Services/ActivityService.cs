@@ -42,6 +42,8 @@ namespace ProjectManager.Core.Services
 
             ValidDates(activity.InitialDate, project.InitialDate);
 
+            ValidDateActivity(activity.InitialDate, activity.FinalDate);
+
             var newActivity = await _repoActivity.Save(activity);
 
             await AfterTransactionActivity(project);
@@ -56,6 +58,14 @@ namespace ProjectManager.Core.Services
             if (initialDateA < initialDateP)
             {
                 throw new Exception("Data inicial da Atividade não pode ser menor que data inicial do projeto");
+            }
+        }
+
+        public void ValidDateActivity(DateTime initialDate, DateTime finalDate)
+        {
+            if(finalDate < initialDate)
+            {
+                throw new Exception("Data final não pode ser menor que a data inicial da atividade");
             }
         }
 
@@ -113,6 +123,8 @@ namespace ProjectManager.Core.Services
             var project = await _repoActivity.GetProject(activity.ProjectId);
 
             ValidDates(activity.InitialDate, project.InitialDate);
+
+            ValidDateActivity(activity.InitialDate, activity.FinalDate);
 
             await _repoActivity.Update(activity);
 
