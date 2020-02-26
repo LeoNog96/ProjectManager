@@ -13,7 +13,7 @@ Para executar todo projeto foi criado um docker-compose, antes de executar o doc
 
 * No projeto `projectmanager.frontend` existe um arquvio com o nome `.env.production` substituir `SEU_IP` pelo o ip da sua maquina.
 
-Após realizar o procedimento acima executar o seguinte comando na raiz do projeto:
+Após realizar o procedimento acima executar o seguinte comando na raiz do repositório:
 
 ```console
 $ docker-compose up
