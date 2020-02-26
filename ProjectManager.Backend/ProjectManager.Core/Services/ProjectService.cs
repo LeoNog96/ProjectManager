@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +24,9 @@ namespace ProjectManager.Core.Services
 
         public async Task<Project> Get(long projectId)
         {
-            return await _repository.Get(projectId);
+            var project = await _repository.Get(projectId);
+
+            return project.Removed.Value ? null : project;
         }
 
         public async Task<List<Project>> GetAll()
@@ -35,11 +38,23 @@ namespace ProjectManager.Core.Services
 
         public async Task<Project> Save(Project project)
         {
+            ValidDateProject(project.InitialDate, project.FinalDate);
+
             return await _repository.Save(project);
+        }
+
+        public void ValidDateProject(DateTime initialDate, DateTime finalDate)
+        {
+            if(finalDate < initialDate)
+            {
+                throw new Exception("Data final não pode ser menor que a data inicial do projeto");
+            }
         }
 
         public async Task Update(Project project)
         {
+            ValidDateProject(project.InitialDate, project.FinalDate);
+
             await _repository.Update(project);
         }
     }

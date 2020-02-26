@@ -14,151 +14,333 @@ namespace ProjectManager.Tests
         [Fact]
         public void SaveNormal()
         {
-            using var context = StartDb.Start();
-
-            var repoA = new ActivityRepository(context);
-
-            var service = new ActivityService(repoA);
-
-            var newAct = service.Save(new Activity
+            var options = new DbContextOptionsBuilder<ProjectManagerContext>()
+                .UseInMemoryDatabase(databaseName: "save")
+                .Options;
+            using (var context = new ProjectManagerContext(options, null))
             {
-                Name = "teste1",
-                InitialDate = DateTime.Now,
-                FinalDate = DateTime.Now.AddDays(1),
-                ProjectId = 1,
-                Finished = false
-            }).Result;
+                context.Projects.Add(new Project
+                {
+                    Name = "teste1",
+                    InitialDate = DateTime.Now,
+                    FinalDate = DateTime.Now.AddMonths(1),
+                    PercentComplete = 0,
+                    Late = false,
+                    Removed = false
+                });
+                context.SaveChanges();
+            }
 
-            Assert.NotNull(newAct);
+            using (var context = new ProjectManagerContext(options, null))
+            {
+                var repoA = new ActivityRepository(context);
+
+                var service = new ActivityService(repoA);
+
+                var newAct = service.Save(new Activity
+                {
+                    Name = "teste1",
+                    InitialDate = DateTime.Now,
+                    FinalDate = DateTime.Now.AddDays(1),
+                    ProjectId = 1,
+                    Finished = false
+                }).Result;
+
+                Assert.NotNull(newAct);
+            }
         }
 
         [Fact]
         public void SaveWithoutField()
         {
-            using var context = StartDb.Start();
+            var options = new DbContextOptionsBuilder<ProjectManagerContext>()
+                .UseInMemoryDatabase(databaseName: "save")
+                .Options;
 
-            var repoA = new ActivityRepository(context);
+            using (var context = new ProjectManagerContext(options, null))
+            {
+                context.Projects.Add(new Project
+                {
+                    Name = "teste1",
+                    InitialDate = DateTime.Now,
+                    FinalDate = DateTime.Now.AddMonths(1),
+                    PercentComplete = 0,
+                    Late = false,
+                    Removed = false
+                });
+                context.SaveChanges();
+            }
 
-            var service = new ActivityService(repoA);
+            using (var context = new ProjectManagerContext(options, null))
+            {
+                var repoA = new ActivityRepository(context);
 
-            Assert.Throws<AggregateException>(
-                () =>  service.Save(new Activity
-                    {
-                        Name = "teste1",
-                        InitialDate = DateTime.Now,
-                        FinalDate = DateTime.Now.AddDays(1),
-                        Finished = false
-                    }
-                ).Result
-            );
+                var service = new ActivityService(repoA);
+
+                Assert.ThrowsAsync<AggregateException>(
+                    () =>  service.Save(new Activity
+                        {
+                            Name = "testeException",
+                            InitialDate = DateTime.Now,
+                            FinalDate = DateTime.Now.AddDays(1),
+                            Finished = false
+                        }
+                    )
+                );
+            }
         }
 
         [Fact]
         public void UpdateWithoutField()
         {
-            using var context = StartDb.Start();
+            var options = new DbContextOptionsBuilder<ProjectManagerContext>()
+                .UseInMemoryDatabase(databaseName: "save")
+                .Options;
 
-            var repoA = new ActivityRepository(context);
+            using (var context = new ProjectManagerContext(options, null))
+            {
+                context.Projects.Add(new Project
+                {
+                    Name = "teste1",
+                    InitialDate = DateTime.Now,
+                    FinalDate = DateTime.Now.AddMonths(1),
+                    PercentComplete = 0,
+                    Late = false,
+                    Removed = false
+                });
 
-            var service = new ActivityService(repoA);
+                context.Activities.Add(new Activity
+                {
+                    Name = "teste1",
+                    InitialDate = DateTime.Now,
+                    FinalDate = DateTime.Now.AddDays(1),
+                    ProjectId = 1,
+                    Finished = false
+                });
 
-            var activity = service.Get(1).Result;
+                context.SaveChanges();
+            }
 
-            activity.ProjectId = 0;
+            using (var context = new ProjectManagerContext(options, null))
+            {
+                var repoA = new ActivityRepository(context);
 
-            Assert.Throws<AggregateException>(
-                () =>  service.Update(activity).Wait()
-            );
+                var service = new ActivityService(repoA);
+
+                var activity = service.Get(1).Result;
+
+                activity.ProjectId = 0;
+
+                Assert.ThrowsAsync<AggregateException>(
+                    () =>  service.Update(activity)
+                );
+            }
         }
 
         [Fact]
         public void UpdateNormal()
         {
-            using var context = StartDb.Start();
+            var options = new DbContextOptionsBuilder<ProjectManagerContext>()
+                .UseInMemoryDatabase(databaseName: "save")
+                .Options;
 
-            var repoA = new ActivityRepository(context);
+            using (var context = new ProjectManagerContext(options, null))
+            {
+                context.Projects.Add(new Project
+                {
+                    Name = "teste1",
+                    InitialDate = DateTime.Now,
+                    FinalDate = DateTime.Now.AddMonths(1),
+                    PercentComplete = 0,
+                    Late = false,
+                    Removed = false
+                });
 
-            var service = new ActivityService(repoA);
+                context.Activities.Add(new Activity
+                {
+                    Name = "teste1",
+                    InitialDate = DateTime.Now,
+                    FinalDate = DateTime.Now.AddDays(1),
+                    ProjectId = 1,
+                    Finished = false
+                });
 
-            var activity = service.Get(1).Result;
+                context.SaveChanges();
+            }
 
-            activity.Name = "testeUpdate";
+            using (var context = new ProjectManagerContext(options, null))
+            {
+                var repoA = new ActivityRepository(context);
 
-            service.Update(activity).Wait();
+                var service = new ActivityService(repoA);
 
-            var newActivity = service.Get(1).Result;
+                var activity = service.Get(1).Result;
 
-            Assert.Equal("testeUpdate" , newActivity.Name);
+                activity.Name = "testeUpdate";
+
+                service.Update(activity).Wait();
+
+                var newActivity = service.Get(1).Result;
+
+                Assert.Equal("testeUpdate" , newActivity.Name);
+            }
         }
 
         [Fact]
         public void DeleteNormal()
         {
-            using var context = StartDb.Start();
+            var options = new DbContextOptionsBuilder<ProjectManagerContext>()
+                .UseInMemoryDatabase(databaseName: "save")
+                .Options;
 
-            var repoA = new ActivityRepository(context);
+            using (var context = new ProjectManagerContext(options, null))
+            {
+                context.Projects.Add(new Project
+                {
+                    Name = "teste1",
+                    InitialDate = DateTime.Now,
+                    FinalDate = DateTime.Now.AddMonths(1),
+                    PercentComplete = 0,
+                    Late = false,
+                    Removed = false
+                });
 
-            var service = new ActivityService(repoA);
+                context.Activities.Add(new Activity
+                {
+                    Name = "teste1",
+                    InitialDate = DateTime.Now,
+                    FinalDate = DateTime.Now.AddDays(1),
+                    ProjectId = 1,
+                    Finished = false
+                });
 
-            service.Delete(1, 1).Wait();
+                context.SaveChanges();
+            }
 
-            var activity = service.Get(1).Result;
+            using (var context = new ProjectManagerContext(options, null))
+            {
+                var repoA = new ActivityRepository(context);
 
-            Assert.Null(activity);
+                var service = new ActivityService(repoA);
+
+                service.Delete(1, 1).Wait();
+
+                var activity = service.Get(1).Result;
+
+                Assert.Null(activity);
+            }
         }
 
         [Fact]
         public void ValidDatesWithException()
         {
-            using var context = StartDb.Start();
+            var options = new DbContextOptionsBuilder<ProjectManagerContext>()
+                .UseInMemoryDatabase(databaseName: "save")
+                .Options;
 
-            var repoA = new ActivityRepository(context);
+            using (var context = new ProjectManagerContext(options, null))
+            {
+                var repoA = new ActivityRepository(context);
 
-            var service = new ActivityService(repoA);
+                var service = new ActivityService(repoA);
 
-            Exception ex = Assert.Throws<Exception>(
-                () => service.ValidDates(DateTime.Now.AddDays(-1), DateTime.Now));
+                Exception ex = Assert.Throws<Exception>(
+                    () => service.ValidDates(DateTime.Now.AddDays(-1), DateTime.Now));
 
-            Assert.Equal("Data inicial da Atividade não pode ser menor que data inicial do projeto", ex.Message);
+                Assert.Equal("Data inicial da Atividade não pode ser menor que data inicial do projeto", ex.Message);
+            }
         }
 
         [Fact]
         public void ValidDatesWithoutException()
         {
-            using var context = StartDb.Start();
+            var options = new DbContextOptionsBuilder<ProjectManagerContext>()
+                .UseInMemoryDatabase(databaseName: "save")
+                .Options;
 
-            var repoA = new ActivityRepository(context);
-
-            var service = new ActivityService(repoA);
-            try
+            using (var context = new ProjectManagerContext(options, null))
             {
-                service.ValidDates(DateTime.Now, DateTime.Now.AddDays(-1));
-                Assert.True(true);
-            }
-            catch {
-                Assert.True(false);
+                var repoA = new ActivityRepository(context);
+
+                var service = new ActivityService(repoA);
+                try
+                {
+                    service.ValidDates(DateTime.Now, DateTime.Now.AddDays(-1));
+                    Assert.True(true);
+                }
+                catch {
+                    Assert.True(false);
+                }
             }
         }
 
         [Fact]
         public void ValidDatesEquals()
         {
-            using var context = StartDb.Start();
+            var options = new DbContextOptionsBuilder<ProjectManagerContext>()
+                .UseInMemoryDatabase(databaseName: "save")
+                .Options;
 
-            var repoA = new ActivityRepository(context);
-
-            var service = new ActivityService(repoA);
-
-            try
+            using (var context = new ProjectManagerContext(options, null))
             {
-                var date = DateTime.Now;
+                var repoA = new ActivityRepository(context);
 
-                service.ValidDates(date, date);
+                var service = new ActivityService(repoA);
 
-                Assert.True(true);
+                try
+                {
+                    var date = DateTime.Now;
+
+                    service.ValidDates(date, date);
+
+                    Assert.True(true);
+                }
+                catch {
+                    Assert.True(false);
+                }
             }
-            catch {
-                Assert.True(false);
+        }
+
+        [Fact]
+        public void GetAll()
+        {
+            var options = new DbContextOptionsBuilder<ProjectManagerContext>()
+                .UseInMemoryDatabase(databaseName: "save")
+                .Options;
+
+            using (var context = new ProjectManagerContext(options, null))
+            {
+                context.Projects.Add(new Project
+                {
+                    Name = "teste1",
+                    InitialDate = DateTime.Now,
+                    FinalDate = DateTime.Now.AddMonths(1),
+                    PercentComplete = 0,
+                    Late = false,
+                    Removed = false
+                });
+
+                context.Activities.Add(new Activity
+                {
+                    Name = "teste1",
+                    InitialDate = DateTime.Now,
+                    FinalDate = DateTime.Now.AddDays(1),
+                    ProjectId = 1,
+                    Finished = false
+                });
+
+                context.SaveChanges();
+            }
+
+            using (var context = new ProjectManagerContext(options, null))
+            {
+                var repoA = new ActivityRepository(context);
+
+                var service = new ActivityService(repoA);
+
+                var activities = service.GetAllByProject(1).Result;
+
+                Assert.Equal(3, activities.Count);
             }
         }
     }

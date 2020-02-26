@@ -22,14 +22,7 @@ namespace ProjectManager.Repositories
 
         public async Task<T> Get(object id)
         {
-            var entity =  await _db.Set<T>().FindAsync(id);
-
-            if (entity != null)
-            {
-                _db.Entry(entity).State = EntityState.Detached;
-            }
-
-            return entity;
+            return await _db.Set<T>().FindAsync(id);
         }
 
         public async Task<T> Save(T entity)
