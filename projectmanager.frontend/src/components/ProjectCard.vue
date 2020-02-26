@@ -60,7 +60,7 @@
 
 <script>
 import ProjectCEDialog from './ProjectCEDialog'
-
+import {utils} from '../mixins/utils'
 
 export default {
     name: 'ProjectCard',
@@ -71,26 +71,14 @@ export default {
         project: Object
     },
 
+    mixins:[utils],
+    
     data: () => ({
         showDialog: false,
         activeDelete: false,
     }),
     
-    methods:{
-        convertExpresionBool(expression){
-            return expression ? 'Sim' : 'Não'
-        },
-
-        convertDate(date){
-            let newDate = new Date(date)
-            let day  = newDate.getDate().toString()
-            let dayfF = (day.length == 1) ? '0' + day : day
-            let month  = (newDate.getMonth()+1).toString()
-            let monthF = (month.length == 1) ? '0' + month : month
-            let yearF = newDate.getFullYear()
-
-            return dayfF + '/' + monthF + '/' + yearF;
-        },
+    methods:{        
 
         goActivities(){
             this.$router.push('/projeto/'+this.project.id+'/atividades')

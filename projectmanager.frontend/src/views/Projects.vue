@@ -14,14 +14,14 @@
             :key="item.id"
             :project="item">
             </ProjectCard>
-            
+            <SpeedDial @new-item="newItem" :bottomPosition="'md-bottom-right'"></SpeedDial>
         </div>
         <ProjectCEDialog @close-task-dialog="projectDialogManager" 
             :project="project" 
             :showDialog="showDialog"
         >
         </ProjectCEDialog>
-        <SpeedDial @new-item="newItem" :bottomPosition="'md-bottom-right'"></SpeedDial>
+        
     </div>
     
 </template>

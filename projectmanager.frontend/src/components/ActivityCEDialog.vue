@@ -2,15 +2,15 @@
     <div>
         <md-dialog class="teste" :md-active.sync="showDialog">
        
-            <md-dialog-title>Projetos</md-dialog-title>
+            <md-dialog-title>Atividades</md-dialog-title>
             <form novalidate class="md-layout" @submit.prevent="submitform()">
 
                 <md-dialog-content>
                     <div class="md-layout md-gutter">
                         <div class="md-layout-item md-small-size-100">
                             <md-field :class="getValidationClass('name')">
-                                <label for="project-name">Nome do Projeto</label>
-                                <md-input name="project-name" id="project-name" v-model="form.name" :disabled="sending" />
+                                <label for="activity-name">Nome da Atividade</label>
+                                <md-input name="activity-name" id="activity-name" v-model="form.name" :disabled="sending" />
                                 <span class="md-error" v-if="!$v.form.name.required">O nome do projeto é requerido</span>
                             </md-field>
                         </div>
@@ -35,6 +35,19 @@
                                 </md-datepicker>
                                 <span class="l-error" v-if="!$v.form.finalDate.required">A data final do projeto é requerida</span>
                             </div>
+                        </div>
+                    </div>
+
+                     <div class="md-layout md-gutter">
+                        <div class="md-layout-item md-small-size-100">
+                            <md-field :class="getValidationClass('finished')">
+                                <label for="finished">Finalizada?</label>
+                                <md-select name="finished" id="finished" v-model="form.finished" md-dense :disabled="sending">
+                                    <md-option :value="true">Sim</md-option>
+                                    <md-option :value="false">Não</md-option>
+                                </md-select>
+                                <span class="md-error" v-if="!$v.form.finished.required">A situação da atividade é requerida</span>
+                            </md-field>
                         </div>
                     </div>
                 </md-dialog-content>
@@ -62,8 +75,9 @@ export default {
     mixins: [validationMixin],
     
     props:{
-        project: Object,
-        showDialog: Boolean
+        projectId: Int32Array,
+        showDialog: Boolean,
+        activity: Object
     },
 
     data: () => ({
@@ -71,8 +85,9 @@ export default {
         name: null,
         initialDate: null,
         finalDate: null,
+        finished: false,
       },
-      projectSaved: false,
+      activitySaved: false,
       sending: false,
     }),
 
@@ -86,6 +101,9 @@ export default {
         },
         finalDate: {
           required
+        },
+        finished: {
+            required
         }
       }
     },
@@ -105,29 +123,33 @@ export default {
             this.form.name = null
             this.form.initialDate = null
             this.form.finalDate = null
+            this.form.finished = false
         },
 
         init(){
-            if (this.project.id !== 0){
-                this.form.name = this.project.name
-                this.form.initialDate = new Date(this.project.initialDate)
-                this.form.finalDate = new Date(this.project.finalDate)
+            if (this.activity.id !== 0){
+                this.form.name = this.activity.name
+                this.form.initialDate = new Date(this.activity.initialDate)
+                this.form.finalDate = new Date(this.activity.finalDate)
+                this.form.finished = this.activity.finished
             }            
         },
 
         save(){
             this.sending = true
+
             let obj = {
                 name: this.form.name,
-                initialDate: this.form.initialDate,
-                finalDate: this.form.finalDate,
-                percentComplete: 0,
+                initialDate: new Date(this.form.initialDate).toISOString(),
+                finalDate: new Date(this.form.finalDate).toISOString(),
+                finished: this.form.finished,
             }
+            
             window.setTimeout(() => {
-                this.projectSaved = true
+                this.activitySaved = true
                 this.sending = false
                 this.clearForm()
-                this.$emit('close-task-dialog',{showDialog: false, projectSaved: this.projectSaved})
+                this.$emit('close-task-dialog',{showDialog: false, activitySaved: this.activitySaved})
                 }, 1500
             )
             console.log(obj);
@@ -135,26 +157,26 @@ export default {
 
         update(){
             this.sending = true
+            
             let obj = {
-                id: this.project.id,
+                id: this.activity.id,
                 name: this.form.name,
-                initialDate: this.form.initialDate,
-                finalDate: this.form.finalDate,
-                percentComplete: this.project.percentComplete,
-                late: this.project.late,
-                removed : false,
+                initialDate: new Date(this.form.initialDate).toISOString(),
+                finalDate: new Date(this.form.initialDate).toISOString(),
+                finished: this.form.finished,
             }
+            
             window.setTimeout(() => {
-                this.projectSaved = true
+                this.activitySaved = true
                 this.sending = false
-                this.$emit('close-task-dialog',{showDialog: false, projectSaved: this.projectSaved})
+                this.$emit('close-task-dialog',{showDialog: false, activitySaved: this.activitySaved})
                 }, 1500
             )
             console.log(obj);
         }, 
 
         close(){
-            this.$emit('close-task-dialog',{showDialog: false, projectSaved: false})
+            this.$emit('close-task-dialog',{showDialog: false, activitySaved: false})
         },
 
         submitform(){
@@ -163,7 +185,7 @@ export default {
 
             if (!this.$v.$invalid) {
                 
-                if(this.project.id === 0)
+                if(this.activity.id === 0)
                     this.save()
                 else
                     this.update()
