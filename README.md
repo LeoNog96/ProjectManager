@@ -19,7 +19,7 @@ Após realizar o procedimento acima executar o seguinte comando na raiz do proje
 $ docker-compose up
 ```
 
-Este comando irá executar o Projeto.
+Este comando irá compilar e executar o Projeto via docker.
 
 ### Documentação WebApi
 
