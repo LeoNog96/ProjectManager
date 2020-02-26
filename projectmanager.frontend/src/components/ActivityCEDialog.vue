@@ -145,14 +145,25 @@ export default {
                 projectId: this.projectId
             }
             
-            window.setTimeout(() => {
-                this.activitySaved = true
-                this.sending = false
-                this.clearForm()
-                this.$emit('close-task-dialog',{showDialog: false, activitySaved: this.activitySaved})
-                }, 1500
-            )
-            console.log(obj);
+            this.$http.post('activities', obj)
+                .then(response => 
+                {
+                    if(response.status === 201){
+                        this.activitySaved = true
+                    }
+                })
+                .catch(() =>
+                {
+                    this.activitySaved = false
+                    this.error = true
+                
+                })
+                .finally(() =>
+                {
+                    this.clearForm()
+                    this.sending = false
+                    this.$emit('close-task-dialog',{showDialog: false, activitySaved: this.activitySaved, error: this.error})
+                })
         },
 
         update(){
@@ -167,17 +178,28 @@ export default {
                 projectId: this.projectId
             }
             
-            window.setTimeout(() => {
-                this.activitySaved = true
-                this.sending = false
-                this.$emit('close-task-dialog',{showDialog: false, activitySaved: this.activitySaved})
-                }, 1500
-            )
-            console.log(obj);
+           this.$http.put('activities', obj)
+                .then(response => 
+                {
+                    if(response.status === 204){
+                        this.activitySaved = true
+                    }
+                })
+                .catch(() =>
+                {
+                    this.activitySaved = false
+                    this.error = true
+                
+                })
+                .finally(() =>
+                {
+                    this.sending = false
+                    this.$emit('close-task-dialog',{showDialog: false, activitySaved: this.activitySaved, error: this.error})
+                })
         }, 
 
         close(){
-            this.$emit('close-task-dialog',{showDialog: false, activitySaved: false})
+            this.$emit('close-task-dialog',{showDialog: false, activitySaved: false, error: false})
         },
 
         submitform(){

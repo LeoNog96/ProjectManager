@@ -16,7 +16,8 @@
             <h3>Atividades</h3>
             <md-divider ></md-divider>
         </div>
-        <div v-if="listActivities.length === 0">
+        <md-progress-bar v-if="showSpinner" md-mode="query"></md-progress-bar>
+        <div v-if="listActivities.length === 0 ||  showSpinner">
             <EmptyState :label="label" :description="desc"  @new-from-empty="newItem"></EmptyState>
         </div>
         <div v-else>
@@ -28,6 +29,10 @@
             :showDialog="this.showDialog" 
             @close-task-dialog="activityDialogManager" 
         ></ActivityCEDialog>
+        <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
+            <span>Falha na operação</span>
+            <md-button class="md-primary" @click="showSnackbar = false">Ok</md-button>
+        </md-snackbar>
     </div>
   
 </template>
@@ -51,20 +56,21 @@ export default {
         label:'Criar a primeira atividade',
         desc: 'Crie a primeira atividade para acompanhar suas entregas',
         showDialog: false,
-
+        showSpinner: false,
         activity:{
             "id":0
         },
         projectId: 0,
         project:{
-                    "id": 1,
-                    "name": "primeiro teste de teste do teste da teste",
-                    "initialDate": "2020-02-24T14:07:12.395Z",
-                    "finalDate": "2020-02-24T14:07:12.395Z",
-                    "percentComplete": 10,
-                    "late": false,
-                    "removed": true,
-                },
+            "id": 1,
+            "name": "primeiro teste de teste do teste da teste",
+            "initialDate": "2020-02-24T14:07:12.395Z",
+            "finalDate": "2020-02-24T14:07:12.395Z",
+            "percentComplete": 10,
+            "late": false,
+            "removed": true,
+        },
+        showSnackbar: false,
     }),
 
     methods:{
@@ -74,36 +80,46 @@ export default {
 
         activityDialogManager(obj){
             this.showDialog = obj.showDialog
+            
             if(obj.activitySaved)
             {
                 this.loadActivities()
             }
+            
+            if(obj.error){
+                this.showSnackbar = true   
+            }
         },
         
+        loadListCallBack(response){
+            this.listActivities = response.data
+        },
+
+        callBackError(err){
+            console.log(err.response.data.message)
+            this.listActivities = []
+        },
+
+        callbackLoadTimes(){
+			this.showSpinner = false
+		},
+
         loadActivities(){
-            this.listActivities = [
-                {
-                    "id":1,
-                    "name": "Criar a primeira atividade",
-                    "initialDate":"2020-02-20T14:07:12.395Z",
-                    "finalDate":"2020-02-24T14:07:12.395Z",
-                    "projectId":1,
-                    "finished":true,
-                },
-                {
-                    "id":2,
-                    "name": "teste1",
-                    "projectId":1,
-                    "initialDate":"2020-02-20T14:07:12.395Z",
-                    "finalDate":"2020-02-24T14:07:12.395Z",
-                    "finished":false,
-                }
-            ]
+            this.showSpinner = true
+            
+            this.$http.get('activities/all-by-project/'+this.$route.params.id)
+				.then(this.loadListCallBack)
+				.finally(this.callbackLoadTimes)
+				.catch(this.callBackError)
+        },
+
+        init(){
+            this.projectId = parseInt(this.$route.params.id)
+            this.loadActivities()
         }
     },
     mounted(){
-        this.loadActivities()
-        this.projectId = parseInt(this.$route.params.id)
+        this.init()        
     }
 }
 </script>

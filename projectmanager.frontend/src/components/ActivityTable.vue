@@ -53,6 +53,10 @@
             md-cancel-text="Não"
             @md-cancel="onCancel"
             @md-confirm="deleteConfirmActivity" />
+        <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
+            <span>Falha na operação</span>
+            <md-button class="md-primary" @click="showSnackbar = false">Ok</md-button>
+        </md-snackbar>
     </div>
 </template>
 
@@ -74,13 +78,24 @@ export default {
     data:() =>({
         activeDelete: false,       
         toDelete: null,
+        showSnackbar:false
     }),
 
     methods:{
 
         deleteConfirmActivity(){
-            console.log(this.toDelete)
-            this.$emit('refresh')
+            this.$http.delete('activities/'+this.toDelete.projectId+'/'+this.toDelete.id)
+                .then(response =>
+                {
+                    if(response.status === 204){
+                        this.$emit('refresh')
+                    }
+                })
+                .catch(() =>
+                {
+                    this.showSnackbar = true
+                
+                })            
         },
 
         deleteActivity(item){
@@ -90,6 +105,23 @@ export default {
 
         finishActivity(item){
             item.finished = true,
+
+            this.$http.put('activities', item)
+                .then(response => 
+                {
+                    if(response.status === 204){
+                        console.log('ok')
+                    }
+                })
+                .catch(() =>
+                {
+                    this.showSnackbar = true
+                
+                })
+                .finally(() =>
+                {
+                    this.$emit('refresh')
+                })
             console.log(item)
         },
 
@@ -101,6 +133,9 @@ export default {
             if(obj.activitySaved)
             {
                 this.$emit('refresh')
+            }
+            if(obj.error){
+                this.showSnackbar = true   
             }
         }
     }

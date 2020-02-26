@@ -24,7 +24,10 @@ namespace ProjectManager.Repositories
         {
             var entity =  await _db.Set<T>().FindAsync(id);
 
-            _db.Entry(entity).State = EntityState.Detached;
+            if (entity != null)
+            {
+                _db.Entry(entity).State = EntityState.Detached;
+            }
 
             return entity;
         }

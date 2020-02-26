@@ -9,18 +9,22 @@ WORKDIR /src
 COPY ProjectManager.Backend.sln ./
 COPY ProjectManager.Entities/*.csproj ./ProjectManager.Entities/
 COPY ProjectManager.Repositories/*.csproj ./ProjectManager.Repositories/
+COPY ProjectManager.Tests/*.csproj ./ProjectManager.Tests/
 COPY ProjectManager.Core/*.csproj ./ProjectManager.Core/
 
 RUN dotnet restore
 
 COPY . .
 
-# RUN dotnet test
+RUN dotnet test
 
 WORKDIR /src/ProjectManager.Entities
 RUN dotnet build -c Release -o /app
 
 WORKDIR /src/ProjectManager.Repositories
+RUN dotnet build -c Release -o /app
+
+WORKDIR /src/ProjectManager.Tests
 RUN dotnet build -c Release -o /app
 
 WORKDIR /src/ProjectManager.Core

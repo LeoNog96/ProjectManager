@@ -11,19 +11,19 @@ namespace ProjectManager.Core.Services
     public class ActivityService : IActivityService
     {
         private readonly IActivityRepository _repoActivity;
-        private readonly IProjectRepository _repoProject;
 
-        public ActivityService(IActivityRepository repoActivity, IProjectRepository repoProject)
+        public ActivityService(IActivityRepository repoActivity)
         {
             _repoActivity = repoActivity;
-            _repoProject = repoProject;
         }
 
         public async Task Delete(long projectId, long activityId)
         {
             await _repoActivity.Delete(activityId);
 
-            await AfterTransactionActivity(projectId);
+            var project = await _repoActivity.GetProject(projectId);
+
+            await AfterTransactionActivity(project);
         }
 
         public async Task<Activity> Get(long activityId)
@@ -38,47 +38,68 @@ namespace ProjectManager.Core.Services
 
         public async Task<Activity> Save(Activity activity)
         {
+            var project = await _repoActivity.GetProject(activity.ProjectId);
+
+            ValidDates(activity.InitialDate, project.InitialDate);
+
             var newActivity = await _repoActivity.Save(activity);
 
-            await AfterTransactionActivity(newActivity.ProjectId);
+            await AfterTransactionActivity(project);
 
             newActivity.Project = null;
 
             return newActivity;
         }
 
-        public async Task AfterTransactionActivity(long projectId)
+        public void ValidDates(DateTime initialDateA, DateTime initialDateP)
         {
-            var project = await _repoProject.GetByVerify(projectId);
+            if (initialDateA < initialDateP)
+            {
+                throw new Exception("Data inicial da Atividade não pode ser menor que data inicial do projeto");
+            }
+        }
 
+        public async Task AfterTransactionActivity(Project project)
+        {
             var activities = await GetAllByProject(project.Id);
-
-            var percentActivities = CalcPercentComplete(activities.Count,
-                activities.Where(x => x.Finished.Value).ToList().Count);
-
-            var acDateBigger = activities.Find(x => x.FinalDate > project.FinalDate);
-
-            bool isLate = acDateBigger != null;
 
             bool modify = false;
 
-            if (project.PercentComplete != percentActivities)
+            if (activities.Count != 0)
             {
-                project.PercentComplete = percentActivities;
+                var percentActivities = CalcPercentComplete(activities.Count,
+                    activities.Where(x => x.Finished.Value).ToList().Count);
 
-                modify = true;
+                var acDateBigger = activities.Find(x => x.FinalDate > project.FinalDate);
+
+                bool isLate = acDateBigger != null;
+
+                if (project.PercentComplete != percentActivities)
+                {
+                    project.PercentComplete = percentActivities;
+
+                    modify = true;
+                }
+
+                if (project.Late != isLate)
+                {
+                    project.Late = isLate;
+
+                    modify = true;
+                }
             }
-
-            if (project.Late != isLate)
+            else
             {
-                project.Late = isLate;
+                project.Late = false;
+
+                project.PercentComplete = 0;
 
                 modify = true;
             }
 
             if (modify)
             {
-                await _repoProject.Update(project);
+                await _repoActivity.UpdateProject(project);
             }
         }
 
@@ -89,9 +110,13 @@ namespace ProjectManager.Core.Services
 
         public async Task Update(Activity activity)
         {
+            var project = await _repoActivity.GetProject(activity.ProjectId);
+
+            ValidDates(activity.InitialDate, project.InitialDate);
+
             await _repoActivity.Update(activity);
 
-            await AfterTransactionActivity(activity.ProjectId);
+            await AfterTransactionActivity(project);
         }
     }
 }

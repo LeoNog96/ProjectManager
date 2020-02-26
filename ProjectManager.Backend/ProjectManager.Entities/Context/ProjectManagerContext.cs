@@ -14,7 +14,8 @@ namespace ProjectManager.Entities.Context
             IConfiguration config)
             : base(options)
         {
-            _connectionString = config["ProjectManagerContextDb"];
+            if (config != null)
+                _connectionString = config["ProjectManagerContextDb"];
         }
 
         public virtual DbSet<Project> Projects { get; set; }

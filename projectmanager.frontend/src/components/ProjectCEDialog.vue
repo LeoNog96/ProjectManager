@@ -184,7 +184,6 @@ export default {
         },
 
         submitform(){
-            console.log('obj');
             this.$v.$touch()
 
             if (!this.$v.$invalid) {

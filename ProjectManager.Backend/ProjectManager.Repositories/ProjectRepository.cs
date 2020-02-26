@@ -15,11 +15,6 @@ namespace ProjectManager.Repositories
         {
         }
 
-        public async Task<Project> GetByVerify(long projectId)
-        {
-            return await _db.Projects.FindAsync(projectId);
-        }
-
         public async Task DeleteProject(long projectId)
         {
             var entity = await Get(projectId);
