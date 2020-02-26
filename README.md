@@ -31,10 +31,10 @@ O funcionamento da aplicação acontece de forma simples e intuitiva, abaixo ser
 * Tela Principal: Na tela principal é onde é listados os projetos e seus respectivos detalhes, Também é possivel realizar o cadastro de novos projetos.
 
     - Criar novos Projetos: Para criar novos projetos basta um click no botão `Criar o primeiro projeto`:
-    ![NovoProjeto](https://github.com/LeoNog96/ProjectManager/blob/master/img/criar_projeto.png
+    ![NovoProjeto](https://github.com/LeoNog96/ProjectManager/blob/master/img/criar_projeto.png)
 
     ou até mesmo com um click em `novo`:
-    ![NovoProjeto2](https://github.com/LeoNog96/ProjectManager/blob/master/img/novo_projeto.png
+    ![NovoProjeto2](https://github.com/LeoNog96/ProjectManager/blob/master/img/novo_projeto.png)
 
     com isto um basta preencher o formulário de Projeto:
-    ![NovoProjeto3](https://github.com/LeoNog96/ProjectManager/blob/master/img/criar_projeto2.png
+    ![NovoProjeto3](https://github.com/LeoNog96/ProjectManager/blob/master/img/criar_projeto2.png)
