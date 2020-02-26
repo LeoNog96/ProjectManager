@@ -48,7 +48,6 @@
             </md-dialog-actions>
             <md-progress-bar md-mode="indeterminate" v-if="sending" />
         </md-dialog>
-       
     </div>
 </template>
 
@@ -74,6 +73,7 @@ export default {
       },
       projectSaved: false,
       sending: false,
+      error: false,
     }),
 
     validations: {
@@ -125,7 +125,7 @@ export default {
                 percentComplete: 0,
             }
             console.log(obj)
-            this.$http.post('Projects', obj)
+            this.$http.post('projects', obj)
                 .then(response => 
                 {
                     if(response.status === 201){
@@ -135,19 +135,20 @@ export default {
                 .catch(() =>
                 {
                     this.projectSaved = false
-                    // this.$emit('close-task-dialog',{showDialog: false, projectSaved: this.projectSaved})
+                    this.error = true
                 
                 })
                 .finally(() =>
                 {
                     this.clearForm()
                     this.sending = false
-                    this.$emit('close-task-dialog',{showDialog: false, projectSaved: this.projectSaved})
+                    this.$emit('close-task-dialog',{showDialog: false, projectSaved: this.projectSaved, error: this.error})
                 })
         },
 
         update(){
             this.sending = true
+            
             let obj = {
                 id: this.project.id,
                 name: this.form.name,
@@ -157,17 +158,29 @@ export default {
                 late: this.project.late,
                 removed : false,
             }
-            window.setTimeout(() => {
-                this.projectSaved = true
-                this.sending = false
-                this.$emit('close-task-dialog',{showDialog: false, projectSaved: this.projectSaved})
-                }, 1500
-            )
-            console.log(obj);
+
+            this.$http.put('projects', obj)
+                .then(response => 
+                {
+                    if(response.status === 204){
+                        this.projectSaved = true
+                    }
+                })
+                .catch(() =>
+                {
+                    this.projectSaved = false
+                    this.error = true
+                
+                })
+                .finally(() =>
+                {
+                    this.sending = false
+                    this.$emit('close-task-dialog',{showDialog: false, projectSaved: this.projectSaved, error: this.error})
+                })
         }, 
 
         close(){
-            this.$emit('close-task-dialog',{showDialog: false, projectSaved: false})
+            this.$emit('close-task-dialog',{showDialog: false, projectSaved: false, error: false})
         },
 
         submitform(){

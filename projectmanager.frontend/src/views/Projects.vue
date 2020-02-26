@@ -7,7 +7,7 @@
         
         <md-progress-bar v-if="showSpinner" md-mode="query"></md-progress-bar>
 
-        <div v-if="listProject.length === 0">
+        <div v-if="listProject.length === 0 || showSpinner">
             <EmptyState :label="label" :description="desc" @new-from-empty="newItem"></EmptyState>
         </div>
         <div v-else class="project-center">
@@ -24,7 +24,10 @@
             :showDialog="showDialog"
         >
         </ProjectCEDialog>
-        
+        <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
+            <span>Falha na operação</span>
+            <md-button class="md-primary" @click="showSnackbar = false">Ok</md-button>
+        </md-snackbar>
     </div>
     
 </template>
@@ -47,6 +50,7 @@ export default {
             "id":0
         },
         showSpinner: false,
+        showSnackbar: false
     }),
     
     methods:{
@@ -55,6 +59,9 @@ export default {
             if(obj.projectSaved)
             {
                 this.loadList()
+            }
+            if(obj.error){
+                this.showSnackbar = true   
             }
         },
         
@@ -67,7 +74,8 @@ export default {
         },
         
         callBackError(err){
-			console.log(err.response.data.message)
+            console.log(err.response.data.message)
+            this.listProject = []
         },
 
         callbackLoadTimes(){

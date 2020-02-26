@@ -55,6 +55,11 @@
             md-cancel-text="Não"
             @md-cancel="onCancel"
             @md-confirm="deleteProject" />
+
+        <md-snackbar md-position="center" :md-duration="4000" :md-active.sync="showSnackbar" md-persistent>
+            <span>Falha na operação</span>
+            <md-button class="md-primary" @click="showSnackbar = false">Ok</md-button>
+        </md-snackbar>
     </div>
 </template>
 
@@ -76,6 +81,7 @@ export default {
     data: () => ({
         showDialog: false,
         activeDelete: false,
+        showSnackbar:false
     }),
     
     methods:{        
@@ -85,8 +91,17 @@ export default {
         },
 
         deleteProject(){
-            console.log('teste')
-            
+            this.$http.delete('projects/'+this.project.id)
+                .then(response =>
+                {
+                    if (response.status === 204){
+                        this.$emit('refresh')
+                    }
+                }).catch(() =>
+                {
+                    console.log('erro')
+                    this.showSnackbar = true         
+                })        
         },
 
         onCancel(){
@@ -98,6 +113,9 @@ export default {
             if(obj.projectSaved)
             {
                 this.$emit('refresh')
+            }
+            if(obj.error){
+                this.showSnackbar = true   
             }
         },
 
