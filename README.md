@@ -28,7 +28,7 @@ Para Acessar a documentação REST da API basta acessar o seguinte endereço `SE
 ## A Aplicação
 O funcionamento da aplicação acontece de forma simples e intuitiva, abaixo será explicada o uso da aplicação por partes.
 
-* Tela Principal: Na tela principal é onde é listados os projetos e seus respectivos detalhes, Também é possivel realizar o cadastro de novos projetos, exclusão, edição, ver detalhes e ir para as atividades do projeto.
+* Tela Principal: Na tela principal são listados os projetos e seus respectivos detalhes, Também é possivel realizar o cadastro de novos projetos, exclusão, edição, ver detalhes e ir para as atividades do projeto.
 
     - Criar novos Projetos: Para criar novos projetos basta um click no botão `Criar o primeiro projeto`:
     ![NovoProjeto](https://github.com/LeoNog96/ProjectManager/blob/master/img/criar_projeto.png)
