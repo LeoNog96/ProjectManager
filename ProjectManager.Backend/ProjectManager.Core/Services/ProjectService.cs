@@ -43,6 +43,11 @@ namespace ProjectManager.Core.Services
             return await _repository.Save(project);
         }
 
+        /// <summary>
+        /// Valida Se a Data inicial é menor que a data final do projeto
+        /// </summary>
+        /// <param name="initialDate"> Data inicial do projeto</param>
+        /// <param name="finalDate"> Data final do projeto</param>
         public void ValidDateProject(DateTime initialDate, DateTime finalDate)
         {
             if(finalDate < initialDate)

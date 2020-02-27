@@ -53,6 +53,11 @@ namespace ProjectManager.Core.Services
             return newActivity;
         }
 
+        /// <summary>
+        /// Valida Se a Data da atividade é menor que a data inicial do projeto
+        /// </summary>
+        /// <param name="initialDateA"> Data inicial da Atividade</param>
+        /// <param name="initialDateP"> Data inicial do projeto</param>
         public void ValidDates(DateTime initialDateA, DateTime initialDateP)
         {
             if (initialDateA < initialDateP)
@@ -60,6 +65,12 @@ namespace ProjectManager.Core.Services
                 throw new Exception("Data inicial da Atividade não pode ser menor que data inicial do projeto");
             }
         }
+
+        /// <summary>
+        /// Valida Se a Data inicial é menor que a data final da atividade
+        /// </summary>
+        /// <param name="initialDate"> Data inicial da Atividade</param>
+        /// <param name="finalDate"> Data final da Atividade</param>
 
         public void ValidDateActivity(DateTime initialDate, DateTime finalDate)
         {
@@ -69,6 +80,11 @@ namespace ProjectManager.Core.Services
             }
         }
 
+        /// <summary>
+        /// Funciona como um gatilho após as operações de persistencia, atualização e exclusão
+        /// para verificar a porcentagem complesta e se o projeto está atrasado
+        /// </summary>
+        /// <param name="project"> Objeto do projeto</param>
         public async Task AfterTransactionActivity(Project project)
         {
             var activities = await GetAllByProject(project.Id);
@@ -113,6 +129,11 @@ namespace ProjectManager.Core.Services
             }
         }
 
+        /// <summary>
+        /// Calcula a porcentagem completa do do projeto
+        /// </summary>
+        /// <param name="totalActivities"> total de atividades do projeto</param>
+        /// <param name="finishedActivities">total de atividades finalizadas no projeto</param>
         public double CalcPercentComplete(int totalActivities, int finishedActivities)
         {
             return 100 - (((totalActivities - finishedActivities) * 100)  / totalActivities);
